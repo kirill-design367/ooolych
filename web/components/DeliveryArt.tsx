@@ -34,58 +34,36 @@ export function DeliveryMap() {
   return (
     <figure className="delivery-map">
       <svg
-        viewBox="0 0 470 265"
+        viewBox="0 0 448 144"
         role="img"
-        aria-label="Схема поставок из Подольска в Москву и область"
+        aria-label="Схема направления Подольск — Москва"
       >
-        <defs>
-          <radialGradient id="map-paper">
-            <stop stopColor="#e8dcc8" />
-            <stop offset="1" stopColor="#f8f5ef" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="232" cy="132" rx="223" ry="132" fill="url(#map-paper)" />
-        <g
-          fill="none"
-          stroke="#c6bbae"
-          strokeWidth="1.15"
-          strokeLinecap="round"
-        >
-          <path d="M112 90q15-50 83-62c42-6 104 8 127 35s17 66-15 82c-50 24-126 17-159-4s-48-26-36-51Z" />
-          <path d="M147 93c18-34 78-48 115-36s53 38 22 58-97 23-123 1-15-16-14-23Z" />
-          <path d="M70 48l100 36 63 12 104 51 64 9M201 13l13 50 16 30 65 5 87-31M95 165l62-43 74-28 48-65M352 209l-24-28-64-54-36-34" />
-          <path
-            stroke="#b5c7c4"
-            strokeWidth="4"
-            d="M79 84c37-6 44 35 68 18s33-25 44-10 13 26 35 15 33-15 46-1 38 9 47 25 42 19 63 13"
-          />
-        </g>
         <path
-          d="M204 219c-3-21 18-36 12-60s9-43 12-67"
+          d="M85 98h88c34 0 44-51 78-51h78"
           fill="none"
-          stroke="#885637"
-          strokeWidth="2.6"
-          strokeDasharray="3 5"
-          strokeLinecap="round"
+          stroke="#987558"
+          strokeWidth="1.5"
         />
-        <g fill="#69462f" stroke="#f8f5ef" strokeWidth="3">
-          <circle cx="228" cy="92" r="6" />
-          <circle cx="204" cy="219" r="6" />
-        </g>
+        <circle cx="85" cy="98" r="4.5" fill="#302921" />
+        <circle
+          cx="329"
+          cy="47"
+          r="5"
+          fill="var(--paper)"
+          stroke="#302921"
+          strokeWidth="2"
+        />
         <g
-          fill="#342c24"
+          fill="#352d26"
           fontFamily="onest,sans-serif"
-          fontWeight="550"
-          paintOrder="stroke"
-          stroke="#f4ede1"
-          strokeWidth="4"
-          strokeLinejoin="round"
+          fontSize="19"
+          fontWeight="500"
         >
-          <text x="241" y="87" fontSize="23">
-            Москва
-          </text>
-          <text x="218" y="225" fontSize="20">
+          <text x="85" y="81" textAnchor="middle">
             Подольск
+          </text>
+          <text x="329" y="30" textAnchor="middle">
+            Москва
           </text>
         </g>
       </svg>

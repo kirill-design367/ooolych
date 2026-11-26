@@ -1,4 +1,5 @@
 "use client";
+import { HoverWord } from "../components/HoverWord";
 import Link from "next/link";
 import { useState } from "react";
 import { Brand, Arrow, useSupply } from "../components/Supply";
@@ -45,9 +46,14 @@ export default function Home() {
           <Brand hero />
           <h1>Стройматериалы на объект</h1>
           <p>Комплектация и поставка по Москве и области</p>
-          <button className="btn dark" onClick={request}>
-            Запросить расчёт
-          </button>
+          <div className="hero-actions">
+            <button className="btn dark" onClick={request}>
+              <HoverWord>Запросить расчёт</HoverWord>
+            </button>
+            <Link className="btn hero-catalog" href="/catalog/">
+              <HoverWord>Каталог</HoverWord>
+            </Link>
+          </div>
         </div>
       </section>
       <nav className="materials-ticker" aria-label="Категории материалов">
@@ -64,7 +70,7 @@ export default function Home() {
                   key={section.id}
                   href={"/catalog/?c=" + section.id}
                 >
-                  {section.name}
+                  <HoverWord>{section.name}</HoverWord>
                 </Link>
               ))}
             </div>
@@ -154,7 +160,7 @@ export default function Home() {
               </h2>
             </div>
             <Link href="/catalog/" className="textlink">
-              Весь каталог <Arrow />
+              <HoverWord>Весь каталог</HoverWord> <Arrow />
             </Link>
           </div>
           <div className="cat-grid">
@@ -215,8 +221,14 @@ export default function Home() {
       </section>
       <section className="process">
         <div className="shell section">
-          <h2>
-            Как работаем<span>.</span>
+          <h2 className="process-title">
+            Как работаем
+            <span className="process-punctuation">
+              ?
+              <svg aria-hidden="true" viewBox="0 0 120 90" fill="none">
+                <path d="M6 2v21c0 33 19 43 50 43h57" />
+              </svg>
+            </span>
           </h2>
           <DeliveryTruck />
           <div className="steps">
@@ -244,17 +256,6 @@ export default function Home() {
             Для расчёта рейса укажите адрес, дату приёмки и ограничения по
             въезду. Вид машины и условия разгрузки согласуем до отгрузки.
           </p>
-          <h3>Примеры комплектации</h3>
-          <div className="examples">
-            {[
-              "Жилой дом — плиты и утеплитель",
-              "Офис — перегородки и электрика",
-              "Склад — кабель и лотки",
-              "Мастерская — фанера и крепёж",
-            ].map((t) => (
-              <p key={t}>{t}</p>
-            ))}
-          </div>
         </div>
       </section>
       <section className="callout">

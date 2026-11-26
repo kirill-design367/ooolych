@@ -1,4 +1,5 @@
 "use client";
+import { HoverWord } from "./HoverWord";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -68,13 +69,32 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
     focus = useRef<HTMLElement | null>(null);
   const header = useRef<HTMLElement>(null);
   useEffect(() => {
-    function updateGlass() {
-      const amount = Math.min(1, Math.max(0, window.scrollY / 300));
-      header.current?.style.setProperty("--scroll", String(amount));
-    }
-    updateGlass();
-    window.addEventListener("scroll", updateGlass, { passive: true });
-    return () => window.removeEventListener("scroll", updateGlass);
+    const position = () => Math.min(1, Math.max(0, window.scrollY / 650));
+    let displayed = position(),
+      target = displayed,
+      frame = 0,
+      previous = 0;
+    const draw = (now: number) => {
+      const dt = previous ? Math.min(now - previous, 64) : 16;
+      previous = now;
+      displayed += (target - displayed) * (1 - Math.exp(-dt / 120));
+      if (Math.abs(target - displayed) < 0.001) displayed = target;
+      header.current?.style.setProperty("--scroll", displayed.toFixed(4));
+      frame = displayed === target ? 0 : requestAnimationFrame(draw);
+    };
+    const update = () => {
+      target = position();
+      if (!frame) {
+        previous = 0;
+        frame = requestAnimationFrame(draw);
+      }
+    };
+    header.current?.style.setProperty("--scroll", String(displayed));
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      cancelAnimationFrame(frame);
+    };
   }, []);
   useEffect(() => {
     if (staticMode) return;
@@ -241,10 +261,18 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
             aria-label="Главное меню"
             onClick={() => setMenu(false)}
           >
-            <Link href="/catalog/">Каталог</Link>
-            <Link href="/#estimate">Калькулятор</Link>
-            <Link href="/#supply">Поставки</Link>
-            <Link href="/#contacts">Контакты</Link>
+            <Link href="/catalog/">
+              <HoverWord>Каталог</HoverWord>
+            </Link>
+            <Link href="/#estimate">
+              <HoverWord>Калькулятор</HoverWord>
+            </Link>
+            <Link href="/#supply">
+              <HoverWord>Поставки</HoverWord>
+            </Link>
+            <Link href="/#contacts">
+              <HoverWord>Контакты</HoverWord>
+            </Link>
           </nav>
           <a className="tel" href="tel:+79201751446">
             +7 (920) 175-14-46
