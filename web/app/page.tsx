@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Arrow, useSupply } from "../components/Supply";
+import { Brand, Arrow, useSupply } from "../components/Supply";
 import { heroPhoto, mobileHeroPhoto, materialPhoto } from "../lib/assets";
+import { DeliveryTruck, DeliveryMap } from "../components/DeliveryArt";
 import { estimate, price } from "../lib/catalog";
 
 const steps = [
@@ -13,7 +14,7 @@ const steps = [
   ["Документы", "Комплект документов передаём по согласованным условиям."],
 ];
 export default function Home() {
-  const { products, sections, setQty, request, travel } = useSupply(),
+  const { products, sections, setQty, request } = useSupply(),
     [chosen, choose] = useState("plywood"),
     [amount, setAmount] = useState("10"),
     [distance, setDistance] = useState("20");
@@ -41,11 +42,7 @@ export default function Home() {
           />
         </picture>
         <div className="studio-copy">
-          <div className="hero-mark" role="img" aria-label="Луч">
-            <i />
-            <i />
-            <i />
-          </div>
+          <Brand hero />
           <h1>Стройматериалы на объект</h1>
           <p>Комплектация и поставка по Москве и области</p>
           <button className="btn dark" onClick={request}>
@@ -53,23 +50,29 @@ export default function Home() {
           </button>
         </div>
       </section>
-      <div className="index-strip">
-        <div className="shell index-inner">
-          <span className="index-label">Направления</span>
-          {sections.map((s, i) => (
-            <Link href={"/catalog/?c=" + s.id} key={s.id}>
-              <small>{String(i + 1).padStart(2, "0")}</small>
-              {s.name}
-            </Link>
+      <nav className="materials-ticker" aria-label="Категории материалов">
+        <div className="ticker-track">
+          {[false, true].map((copy) => (
+            <div
+              key={String(copy)}
+              className="ticker-group"
+              aria-hidden={copy || undefined}
+            >
+              {sections.map((section) => (
+                <Link
+                  tabIndex={copy ? -1 : undefined}
+                  key={section.id}
+                  href={"/catalog/?c=" + section.id}
+                >
+                  {section.name}
+                </Link>
+              ))}
+            </div>
           ))}
         </div>
-      </div>
+      </nav>
       <section id="estimate" className="shell section estimate">
         <div>
-          <p className="over">
-            <i className="rule" />
-            Предварительная смета
-          </p>
           <h2>
             Расчёт поставки<span>.</span>
           </h2>
@@ -146,10 +149,6 @@ export default function Home() {
         <div className="shell section">
           <div className="section-head">
             <div>
-              <p className="over">
-                <i className="rule" />
-                Ассортимент
-              </p>
               <h2>
                 Каталог материалов<span>.</span>
               </h2>
@@ -166,13 +165,9 @@ export default function Home() {
               return (
                 <Link
                   key={s.id}
+                  id={"cat-" + s.id}
                   className={"cat cat-" + i}
                   href={"/catalog/?c=" + s.id}
-                  onClick={(e) => {
-                    if (e.metaKey || e.ctrlKey) return;
-                    e.preventDefault();
-                    travel(s.id);
-                  }}
                 >
                   <img
                     className="material-photo"
@@ -183,14 +178,13 @@ export default function Home() {
                     height="430"
                   />
                   <div className="cat-body">
-                    <h3 id={"cat-" + s.id}>{s.name}</h3>
+                    <h3>{s.name}</h3>
                     <p>{s.detail}</p>
                     <strong>
                       {rates[0]
                         ? "от " + price(rates[0].rate) + " / " + rates[0].unit
                         : "По запросу"}
                     </strong>
-                    <Arrow diagonal />
                   </div>
                 </Link>
               );
@@ -200,10 +194,6 @@ export default function Home() {
       </section>
       <section className="shell section twin" id="supply">
         <div>
-          <p className="over">
-            <i className="rule" />
-            Для снабжения
-          </p>
           <h2>
             Поставка для
             <br />
@@ -218,11 +208,8 @@ export default function Home() {
             "Согласование сертификатов",
             "Единый контакт по заявке",
             "График поставки под объект",
-          ].map((v, i) => (
-            <div key={v}>
-              <small>0{i + 1}</small>
-              {v}
-            </div>
+          ].map((v) => (
+            <div key={v}>{v}</div>
           ))}
         </div>
       </section>
@@ -231,6 +218,7 @@ export default function Home() {
           <h2>
             Как работаем<span>.</span>
           </h2>
+          <DeliveryTruck />
           <div className="steps">
             {steps.map(([name, detail], i) => (
               <article key={name}>
@@ -244,20 +232,13 @@ export default function Home() {
       </section>
       <section className="shell section twin">
         <div>
-          <p className="over">
-            <i className="rule" />
-            География поставок
-          </p>
           <h2>
             Москва
             <br />и область<span>.</span>
           </h2>
         </div>
         <div>
-          <div className="area-diagram" aria-label="Схема региона поставки">
-            <span>Москва</span>
-            <span>Подольск</span>
-          </div>
+          <DeliveryMap />
           <h3>Доставка под объём спецификации</h3>
           <p className="body-copy">
             Для расчёта рейса укажите адрес, дату приёмки и ограничения по
@@ -283,7 +264,7 @@ export default function Home() {
             <p>Приложите файл или соберите список в каталоге.</p>
           </div>
           <button className="btn light" onClick={request}>
-            Оставить заявку <Arrow diagonal />
+            Оставить заявку
           </button>
         </div>
       </section>

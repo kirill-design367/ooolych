@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -22,19 +22,36 @@ type Supply = {
   basket: Record<string, number>;
   setQty: (id: string, n: number) => void;
   request: () => void;
-  travel: (id: string, back?: boolean) => void;
 };
 const Context = createContext<Supply | null>(null);
 export const useSupply = () => useContext(Context)!;
-export function Brand() {
-  return <span className="brand">Луч</span>;
-}
-export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
+export function Brand({ hero = false }: { hero?: boolean }) {
   return (
-    <span
-      aria-hidden="true"
-      className={"arrow" + (diagonal ? " diagonal" : "")}
+    <img
+      className={hero ? "hero-logo" : "brand-logo"}
+      width="328"
+      height="100"
+      alt="Луч"
+      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/materials/luch.svg"}
     />
+  );
+}
+export function Arrow() {
+  return (
+    <svg
+      className="link-arrow"
+      aria-hidden="true"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 12h15m-6-6 6 6-6 6" />
+    </svg>
   );
 }
 export function SupplyRoot({ children }: { children: ReactNode }) {
@@ -47,9 +64,18 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
   const [menu, setMenu] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null),
     auth = useRef({ csrf: "", key: "" }),
-    router = useRouter(),
     path = usePathname(),
     focus = useRef<HTMLElement | null>(null);
+  const header = useRef<HTMLElement>(null);
+  useEffect(() => {
+    function updateGlass() {
+      const amount = Math.min(1, Math.max(0, window.scrollY / 300));
+      header.current?.style.setProperty("--scroll", String(amount));
+    }
+    updateGlass();
+    window.addEventListener("scroll", updateGlass, { passive: true });
+    return () => window.removeEventListener("scroll", updateGlass);
+  }, []);
   useEffect(() => {
     if (staticMode) return;
     fetch("/supply.php", { cache: "no-store" })
@@ -128,75 +154,6 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
     setFeedback("");
     dialog.current?.showModal();
   }
-  async function travel(id: string, back = false) {
-    const dest = back ? "/" : "/catalog/?c=" + encodeURIComponent(id);
-    const source = document.getElementById(
-      back ? "catalog-title" : "cat-" + id,
-    );
-    if (!source || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      router.push(dest);
-      return;
-    }
-    const [{ gsap }, { Flip }] = await Promise.all([
-      import("gsap"),
-      import("gsap/Flip"),
-    ]);
-    gsap.registerPlugin(Flip);
-    const panel = document.createElement("div");
-    panel.className = "travel";
-    panel.textContent = source.textContent?.split("↗")[0] || "Каталог";
-    panel.setAttribute("aria-hidden", "true");
-    const r = source.getBoundingClientRect();
-    Object.assign(panel.style, {
-      left: r.left + "px",
-      top: r.top + "px",
-      width: r.width + "px",
-      height: r.height + "px",
-    });
-    document.body.append(panel);
-    const state = Flip.getState(panel);
-    Object.assign(panel.style, {
-      left: "0",
-      top: "0",
-      width: "100vw",
-      height: "100dvh",
-    });
-    Flip.from(state, {
-      duration: 0.38,
-      ease: "power2.inOut",
-      onComplete: () => {
-        router.push(dest, { scroll: false });
-        let attempts = 0;
-        function settle() {
-          const target = document.getElementById(
-            back ? "cat-" + id : "catalog-title",
-          );
-          if (!target && attempts++ < 90) {
-            requestAnimationFrame(settle);
-            return;
-          }
-          if (back)
-            target?.scrollIntoView({ block: "center", behavior: "instant" });
-          else window.scrollTo({ top: 0, behavior: "instant" });
-          if (!target) {
-            panel.remove();
-            return;
-          }
-          const box = target.getBoundingClientRect();
-          gsap.to(panel, {
-            left: box.left,
-            top: box.top,
-            width: box.width,
-            height: box.height,
-            opacity: 0,
-            duration: 0.36,
-            onComplete: () => panel.remove(),
-          });
-        }
-        requestAnimationFrame(settle);
-      },
-    });
-  }
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget,
@@ -270,13 +227,11 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
     }
   }
   return (
-    <Context.Provider
-      value={{ products, sections, basket, setQty, request, travel }}
-    >
+    <Context.Provider value={{ products, sections, basket, setQty, request }}>
       <a className="skip" href="#main">
         К содержанию
       </a>
-      <header>
+      <header ref={header}>
         <div className="shell header-row">
           <Link href="/" aria-label="Луч — главная">
             <Brand />
@@ -295,7 +250,7 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
             +7 (920) 175-14-46
           </a>
           <button className="btn dark small" onClick={request}>
-            Заявка {Object.keys(basket).length || ""} <Arrow diagonal />
+            Заявка {Object.keys(basket).length || ""}
           </button>
           <button
             className="burger"
@@ -326,7 +281,6 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
         </div>
         <div className="shell footline">
           <span>ООО «Луч» · ИНН 5074081719 · ОГРН 1235000061548</span>
-          <Link href="/fonts/">Типографика</Link>
         </div>
       </footer>
       <dialog

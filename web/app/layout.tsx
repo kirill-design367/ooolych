@@ -3,6 +3,9 @@ import { SupplyRoot } from "../components/Supply";
 import "./style.css";
 export const metadata: Metadata = {
   title: { default: "Луч — стройматериалы на объект", template: "%s · Луч" },
+  icons: {
+    icon: (process.env.NEXT_PUBLIC_BASE_PATH || "") + "/materials/luch.svg",
+  },
   description:
     "Комплектация объектов в Москве и области. Листовые материалы, изоляция, кабель и электромонтаж.",
 };

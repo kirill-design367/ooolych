@@ -1,14 +1,14 @@
 "use client";
 import { materialPhoto } from "../../lib/assets";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import { useSupply, Arrow } from "../../components/Supply";
 import { price } from "../../lib/catalog";
 const empty = { c: "", unit: "", q: "" };
 export default function Catalog() {
-  const { products, sections, basket, setQty, request, travel } = useSupply(),
+  const { products, sections, basket, setQty, request } = useSupply(),
     [filters, setFilters] = useState(empty);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const read = () => {
       const url = new URLSearchParams(location.search);
       setFilters({
@@ -40,16 +40,7 @@ export default function Catalog() {
   );
   return (
     <section className="shell section catalog-page">
-      <Link
-        className="textlink"
-        href="/"
-        onClick={(e) => {
-          if (filters.c && !e.metaKey && !e.ctrlKey) {
-            e.preventDefault();
-            travel(filters.c, true);
-          }
-        }}
-      >
+      <Link className="textlink" href={filters.c ? "/#cat-" + filters.c : "/"}>
         ← На главную
       </Link>
       <h1 id="catalog-title">
