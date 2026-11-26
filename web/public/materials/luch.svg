@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 100"><title>Луч</title><path fill="#211d19" d="M0 100 46 0h20l46 100H82L56 40l-26 60ZM90 0h33l29 45 24-45h32l-55 100h-33l17-31ZM219 0h29v34q0 10 11 10h46V0h30v100h-30V69h-56q-30 0-30-29Z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="inverse" viewBox="3 8 255 72" fill="#211e1b" role="img">
+  <style>svg:target{fill:#f6f4ed}svg:target .facet{fill:#9fb8c3}</style>
+  <title>Луч — Сгиб</title>
+  <path class="facet" fill="#5f7985" d="M3 80 45 8h28L31 80Z" />
+  <path d="m59 38 15-26 35 68H82Z" />
+  <path d="M88 8h25l21 34 20-34h27l-46 72h-27l14-19Z" />
+  <path d="M181 8h24v24l6 6h22V8h25v72h-25V56h-35l-17-17Z" />
+</svg>

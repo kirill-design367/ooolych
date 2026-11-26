@@ -1,6 +1,7 @@
 "use client";
 import { HoverWord } from "./HoverWord";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import {
   createContext,
@@ -13,6 +14,13 @@ import {
 } from "react";
 import { items, categories, type Item } from "../lib/catalog";
 
+const RequestFields = dynamic(() => import("./RequestFields"), {
+  loading: () => (
+    <p className="request-done" role="status">
+      Загружаем форму…
+    </p>
+  ),
+});
 const staticMode =
   process.env.NEXT_PUBLIC_STATIC === "1" ||
   process.env.NODE_ENV === "development";
@@ -26,34 +34,26 @@ type Supply = {
 };
 const Context = createContext<Supply | null>(null);
 export const useSupply = () => useContext(Context)!;
-export function Brand({ hero = false }: { hero?: boolean }) {
+export function Brand({
+  hero = false,
+  inverse = false,
+}: {
+  hero?: boolean;
+  inverse?: boolean;
+}) {
   return (
     <img
       className={hero ? "hero-logo" : "brand-logo"}
-      width="335"
-      height="100"
+      width="255"
+      height="72"
       fetchPriority={hero ? "high" : undefined}
       alt="Луч"
-      src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/materials/luch.svg"}
+      src={
+        (process.env.NEXT_PUBLIC_BASE_PATH || "") +
+        "/materials/luch.svg" +
+        (inverse ? "#inverse" : "")
+      }
     />
-  );
-}
-export function Arrow() {
-  return (
-    <svg
-      className="link-arrow"
-      aria-hidden="true"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 12h15m-6-6 6 6-6 6" />
-    </svg>
   );
 }
 export function SupplyRoot({ children }: { children: ReactNode }) {
@@ -64,6 +64,7 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
     [busy, setBusy] = useState(false),
     [complete, setComplete] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [requested, setRequested] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null),
     auth = useRef({ csrf: "", key: "" }),
     path = usePathname(),
@@ -173,6 +174,7 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
     focus.current = document.activeElement as HTMLElement;
     setComplete(false);
     setFeedback("");
+    setRequested(true);
     dialog.current?.showModal();
   }
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -292,40 +294,52 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main id="main">{children}</main>
-      <footer id="contacts">
-        <div className="shell">
-          <Brand />
-          <div>
-            <h2>Свяжитесь с нами</h2>
+      <footer id="contacts" className="contact-footer">
+        <div className="shell footer-layout">
+          <div className="footer-invite">
+            <h2>Обсудим поставку?</h2>
+            <button className="btn footer-action" onClick={request}>
+              <HoverWord>Оставить заявку</HoverWord>
+            </button>
+          </div>
+          <div className="footer-contact">
+            <h3>Контакты</h3>
             <a href="tel:+79201751446">+7 (920) 175-14-46</a>
             <a href="mailto:1751416@internet.ru">1751416@internet.ru</a>
           </div>
+          <Link href="/" className="footer-brand" aria-label="Луч — главная">
+            <Brand inverse />
+          </Link>
           <address>
-            Московская область, г. Подольск
-            <br />
+            <strong>Подольск, Московская область</strong>
             тер. СНТ № 4 ПЭМЗ Красная Горка,
             <br />
             д. 4, стр. 1, ком. 4
           </address>
-        </div>
-        <div className="shell footline">
-          <span>ООО «Луч» · ИНН 5074081719 · ОГРН 1235000061548</span>
+          <div className="footer-legal">
+            <span>ООО «Луч»</span>
+            <span>ИНН 5074081719</span>
+            <span>ОГРН 1235000061548</span>
+          </div>
         </div>
       </footer>
       <dialog
+        className="request-dialog"
         ref={dialog}
         aria-labelledby="request-title"
         data-lenis-prevent
         onClose={() => focus.current?.focus()}
       >
         <div className="dialog-head">
-          <h2 id="request-title">Заявка на расчёт</h2>
+          <h2 id="request-title" tabIndex={-1} autoFocus>
+            Заявка на расчёт
+          </h2>
           <button aria-label="Закрыть" onClick={() => dialog.current?.close()}>
             ×
           </button>
         </div>
         {complete ? (
-          <div role="status">
+          <div className="request-done" role="status">
             <p>{feedback}</p>
             <button
               className="btn dark"
@@ -335,113 +349,14 @@ export function SupplyRoot({ children }: { children: ReactNode }) {
             </button>
           </div>
         ) : (
-          <form onSubmit={submit}>
-            <label>
-              Добавить материал
-              <select
-                value=""
-                onChange={(e) => {
-                  const id = e.target.value;
-                  if (id) setQty(id, (basket[id] || 0) + 1);
-                }}
-              >
-                <option value="">Выберите позицию</option>
-                {products.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {products
-              .filter((p) => basket[p.id])
-              .map((p) => (
-                <div className="basket-row" key={p.id}>
-                  <strong>{p.name}</strong>
-                  <input
-                    type="number"
-                    aria-label={"Количество: " + p.name}
-                    min=".001"
-                    max="9999999"
-                    step=".001"
-                    value={basket[p.id]}
-                    onChange={(e) => {
-                      if (+e.target.value > 0) setQty(p.id, +e.target.value);
-                    }}
-                  />
-                  <span>{p.unit}</span>
-                  <button
-                    type="button"
-                    aria-label={"Удалить " + p.name}
-                    onClick={() => setQty(p.id, 0)}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            <div className="form-grid">
-              <label>
-                Имя
-                <input
-                  name="name"
-                  autoComplete="given-name"
-                  maxLength={120}
-                  required
-                />
-              </label>
-              <label>
-                Телефон или почта
-                <input
-                  name="contact"
-                  autoComplete="email"
-                  required
-                  maxLength={180}
-                />
-              </label>
-              <label>
-                Компания
-                <input
-                  name="company"
-                  autoComplete="organization"
-                  maxLength={200}
-                />
-              </label>
-              <label>
-                Адрес объекта
-                <input name="address" maxLength={250} />
-              </label>
-              <label>
-                Желаемый срок
-                <input type="date" name="when" />
-              </label>
-              {!staticMode && (
-                <label>
-                  Спецификация до 8 МБ
-                  <input type="file" name="file" accept=".pdf,.xls,.xlsx" />
-                </label>
-              )}
-            </div>
-            <label>
-              Материалы, объём или комментарий
-              <textarea name="note" rows={2} maxLength={2900} />
-            </label>
-            <label className="check">
-              <input type="checkbox" name="consent" value="yes" required />
-              Согласен на обработку данных для расчёта и обратной связи.
-            </label>
-            {staticMode && (
-              <p>Скачайте заявку и отправьте её менеджеру по почте.</p>
-            )}
-            <p role="status">{feedback}</p>
-            <button className="btn primary" disabled={busy}>
-              {busy
-                ? "Подготовка…"
-                : staticMode
-                  ? "Скачать заявку"
-                  : "Отправить заявку"}{" "}
-              <Arrow />
-            </button>
-          </form>
+          requested && (
+            <RequestFields
+              staticMode={staticMode}
+              onSubmit={submit}
+              busy={busy}
+              feedback={feedback}
+            />
+          )
         )}
       </dialog>
     </Context.Provider>

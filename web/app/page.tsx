@@ -277,17 +277,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <section className="callout">
-        <div className="shell">
-          <div>
-            <h2>Есть спецификация?</h2>
-            <p>Приложите файл или соберите список в каталоге.</p>
-          </div>
-          <button className="btn light" onClick={request}>
-            Оставить заявку
-          </button>
-        </div>
-      </section>
     </>
   );
 }

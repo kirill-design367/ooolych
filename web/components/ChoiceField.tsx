@@ -8,7 +8,11 @@ export function ChoiceField({
   value,
   options,
   onChange,
+  portalContainer,
+  placeholder = "Выберите материал",
 }: {
+  portalContainer?: HTMLElement | null;
+  placeholder?: string;
   label: string;
   value: string;
   options: Option[];
@@ -26,8 +30,7 @@ export function ChoiceField({
       >
         <Select.Trigger className="choice-trigger" id={id}>
           <Select.Value>
-            {options.find((o) => o.value === value)?.label ||
-              "Выберите материал"}
+            {options.find((o) => o.value === value)?.label || placeholder}
           </Select.Value>
           <Select.Icon aria-hidden="true">
             <svg
@@ -42,7 +45,7 @@ export function ChoiceField({
             </svg>
           </Select.Icon>
         </Select.Trigger>
-        <Select.Portal>
+        <Select.Portal container={portalContainer}>
           <Select.Content
             position="popper"
             sideOffset={6}
