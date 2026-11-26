@@ -1445,7 +1445,7 @@ header {
   }
   @keyframes studio-settle {
     from {
-      opacity: 0.65;
+      opacity: 0.94;
       transform: translateY(9px);
     }
     to {
