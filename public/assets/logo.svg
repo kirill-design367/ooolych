@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 166 54" width="166" height="54" role="img" aria-labelledby="title">
+  <title id="title">Луч</title>
+  <rect width="54" height="54" rx="6" fill="#FFD43B"/>
+  <g fill="#202222">
+    <path d="M6 42 23 12h11L17 42zM29 25l6-11 14 28H37z"/>
+    <path d="m63 42 14-30h12l10 30H89l-7-22-10 22z"/>
+    <path d="m96 12 11 20-6 10h11l17-30h-11l-6 12-6-12z"/>
+    <path d="M131 12h9v9q0 4 4 4h9V12h9v30h-9v-9h-10q-12 0-12-12z"/>
+  </g>
+</svg>
