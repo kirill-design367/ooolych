@@ -1,3 +1,10 @@
 <?php
-require __DIR__.'/../../../app/view.php';$d=catalog();$id=is_string($_GET['id']??null)?$_GET['id']:'';$p=$d['items'][$id]??null;if(!$p)missing('Позиция не найдена');$cat=$d['categories'][$p['category']];$group=$d['groups'][$p['group']]['name']??'';page_top($p['name'],'/catalog/');?>
-<section class="wrap inner"><?php crumbs(['/catalog/'=>'Каталог',catlink($p['category'])=>$cat['name'],$p['name']]);flash();?><div class="item-layout"><?php $own=image_url($p['image']);$cover=$own?:image_url($cat['image']);if($cover):?><figure><img class="item-img" src="<?=h($cover)?>" alt="<?=h($own?$p['name']:$cat['name'])?>"><?php if(!$own||in_array($p['image'],['cable.webp','sheets.webp','insulation.webp','electrical.webp'],true)):?><figcaption>Иллюстрация раздела «<?=h($cat['name'])?>»</figcaption><?php endif;?></figure><?php endif;?><div><div class="kicker"><i></i><?=h($group?:$cat['name'])?></div><h1><?=h($p['name'])?></h1><p class="lead"><?=h($p['description'])?></p><dl class="details"><div><dt>Единица заказа</dt><dd><?=h($p['unit'])?></dd></div><?php foreach(preg_split('/\R/u',$p['specs']??'') as $line){if(trim($line)==='')continue;[$k,$v]=array_pad(explode(':',$line,2),2,'');?><div><dt><?=h($k)?></dt><dd><?=h($v)?></dd></div><?php }?></dl><div class="price"><?=$p['price']!==''?h($p['price']).' ₽ / '.h($p['unit']):'Цена по запросу'?></div><form class="add-form" method="post" action="/request/"><?=csrf()?><input type="hidden" name="action" value="add"><input type="hidden" name="id" value="<?=h($id)?>"><label>Количество <input name="qty" type="number" min=".001" max="9999999" step="any" required value="1"></label><button class="button yellow"><?=icon('plus')?>В заявку</button></form><a class="text-link next-cart" href="/request/">Перейти к заявке</a></div></div></section><?php page_end();?>
+require __DIR__.'/../../../app/core.php';
+$id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
+$item = catalog()['items'][$id] ?? null;
+if (!$item) {
+    http_response_code(404);
+    echo '<meta charset="utf-8"><a href="/catalog/">Позиция снята. Перейти в каталог</a>';
+    exit;
+}
+header('Location: /catalog/?'.http_build_query(['c'=>$item['category'],'q'=>$item['name']]), true, 302);

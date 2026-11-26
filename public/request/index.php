@@ -1,4 +1,8 @@
 <?php
+if ($_SERVER['REQUEST_METHOD']==='GET' && !isset($_GET['sent'])) {
+    header('Location: /?request=1', true, 302);
+    exit;
+}
 require __DIR__.'/../../app/view.php';require __DIR__.'/../../app/leads.php';session_open();$c=catalog();$error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
     check_csrf();try{

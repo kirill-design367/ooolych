@@ -1,2 +1,2 @@
-<?php require __DIR__.'/../../app/view.php';page_top('Контакты','/contacts/');?>
-<section class="wrap inner"><?php crumbs(['Контакты']);?><h1>Контакты</h1><div class="split"><div class="contact-card"><div class="kicker"><i></i> Отдел продаж</div><a href="tel:<?=TEL?>"><?=PHONE?></a><a href="mailto:<?=EMAIL?>"><?=EMAIL?></a><a class="button yellow" href="/request/">Оставить заявку</a></div><div class="panel"><h2>Реквизиты компании</h2><?php record_details();?></div></div></section><?php page_end();?>
+<?php
+header('Location: /#contacts', true, 302);

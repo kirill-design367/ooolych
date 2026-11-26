@@ -1,0 +1,70 @@
+@font-face {
+  font-family: "unbounded";
+  src: url("../type/unbounded-cyrillic.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0400-052F, U+2116;
+}
+@font-face {
+  font-family: "unbounded";
+  src: url("../type/unbounded-latin.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0000-00FF, U+2000-206F, U+20BD, U+2190-21FF;
+}
+@font-face {
+  font-family: "onest";
+  src: url("../type/onest-cyrillic.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0400-052F, U+2116;
+}
+@font-face {
+  font-family: "onest";
+  src: url("../type/onest-latin.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0000-00FF, U+2000-206F, U+20BD, U+2190-21FF;
+}
+@font-face {
+  font-family: "literata";
+  src: url("../type/literata-cyrillic.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0400-052F, U+2116;
+}
+@font-face {
+  font-family: "literata";
+  src: url("../type/literata-latin.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0000-00FF, U+2000-206F, U+20BD, U+2190-21FF;
+}
+@font-face {
+  font-family: "manrope";
+  src: url("../type/manrope-cyrillic.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0400-052F, U+2116;
+}
+@font-face {
+  font-family: "manrope";
+  src: url("../type/manrope-latin.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0000-00FF, U+2000-206F, U+20BD, U+2190-21FF;
+}
+@font-face {
+  font-family: "golos-text";
+  src: url("../type/golos-text-cyrillic.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0400-052F, U+2116;
+}
+@font-face {
+  font-family: "golos-text";
+  src: url("../type/golos-text-latin.woff2") format("woff2");
+  font-display: fallback;
+  font-weight: 100 900;
+  unicode-range: U+0000-00FF, U+2000-206F, U+20BD, U+2190-21FF;
+}

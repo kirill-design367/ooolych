@@ -1,2 +1,2 @@
-<?php require __DIR__.'/../../app/view.php';page_top('О компании','/about/');?>
-<section class="wrap inner"><?php crumbs(['О компании']);?><div class="split intro"><div><div class="kicker"><i></i> Подольск</div><h1>О компании</h1><p class="lead">ООО «Луч» занимается оптовыми поставками строительных материалов и электротехнической продукции.</p></div><img class="feature-img" src="/assets/sheets.webp" alt="Листовые материалы на стеллаже"></div><div class="split section lined"><h2>Как заказать</h2><div class="steps"><h3>Соберите список</h3><p>Выберите позиции и количество в каталоге или приложите собственную ведомость в Excel или PDF.</p><h3>Уточните параметры</h3><p>Менеджер согласует с вами марки, размеры, стоимость и условия поставки по вашей заявке.</p><a class="button dark" href="/request/">Запросить расчёт</a></div></div></section><?php page_end();?>
+<?php
+header('Location: /#supply', true, 302);

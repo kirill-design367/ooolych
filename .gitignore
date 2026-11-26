@@ -3,3 +3,20 @@
 /luch-private/
 
 /var/
+
+web/node_modules/
+web/.next/
+web/out/
+web/tsconfig.tsbuildinfo
+public/_next/
+public/type/
+/public/*.html
+/public/*.txt
+!/public/robots.txt
+/public/.nojekyll
+/public/404/
+/public/catalog/*.html
+/public/catalog/*.txt
+/public/fonts/
+/public/_not-found/
+/public/materials/
