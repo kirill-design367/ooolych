@@ -30,8 +30,9 @@ export function Brand({ hero = false }: { hero?: boolean }) {
   return (
     <img
       className={hero ? "hero-logo" : "brand-logo"}
-      width="328"
+      width="335"
       height="100"
+      fetchPriority={hero ? "high" : undefined}
       alt="Луч"
       src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/materials/luch.svg"}
     />

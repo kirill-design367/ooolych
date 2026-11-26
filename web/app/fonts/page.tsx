@@ -24,7 +24,7 @@ export default function Fonts() {
   return (
     <section className="shell section fonts-page">
       <Link className="textlink" href="/">
-        ← На главную
+        На главную
       </Link>
       <h1>
         Типографика<span>.</span>

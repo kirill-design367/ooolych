@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 110" fill="#211e1b" role="img">
+  <title>Луч — Световой шов</title>
+  <path d="M4 98 37 11h44L45 98Zm52 0 36-87h16v87Z" />
+  <g transform="translate(124 39)" fill="none" stroke="#211e1b" stroke-width="5.5" stroke-linejoin="bevel">
+  <path d="M1 32 13 2h4l12 30 M35 2l11 17 M58 2 40 32 M66 2v10q0 7 7 7h16M89 2v30" />
+  </g>
+</svg>

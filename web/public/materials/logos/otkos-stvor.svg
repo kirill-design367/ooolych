@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 253 100" fill="#211e1b" role="img">
+  <title>Луч — Створ</title>
+  <path d="M4 86V14h73L62 35H23v51Z" />
+  <path d="M30 86 79 20v66H60V57L38 86Z" />
+  <g fill="none" stroke="#211e1b" stroke-width="7" stroke-linejoin="miter">
+  <path d="m103 73 19-45h8l19 45 M157 27l17 28m19-28-28 46 M209 27v16q0 9 9 9h27m0-25v46" />
+  </g>
+</svg>

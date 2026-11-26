@@ -2,7 +2,9 @@
 import { materialPhoto } from "../../lib/assets";
 import Link from "next/link";
 import { useState, useLayoutEffect } from "react";
-import { useSupply, Arrow } from "../../components/Supply";
+import { ChoiceField } from "../../components/ChoiceField";
+import { HoverWord } from "../../components/HoverWord";
+import { useSupply } from "../../components/Supply";
 import { price } from "../../lib/catalog";
 const empty = { c: "", unit: "", q: "" };
 export default function Catalog() {
@@ -41,7 +43,7 @@ export default function Catalog() {
   return (
     <section className="shell section catalog-page">
       <Link className="textlink" href={filters.c ? "/#cat-" + filters.c : "/"}>
-        ← На главную
+        <HoverWord>На главную</HoverWord>
       </Link>
       <h1 id="catalog-title">
         {sections.find((s) => s.id === filters.c)?.name || "Каталог материалов"}
@@ -51,32 +53,27 @@ export default function Catalog() {
         Цены ориентировочные. Наличие и условия поставки уточняем при расчёте.
       </p>
       <div className="filters">
-        <label>
-          Направление
-          <select
-            value={filters.c}
-            onChange={(e) => change("c", e.target.value)}
-          >
-            <option value="">Все направления</option>
-            {sections.map((s) => (
-              <option value={s.id} key={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Единица
-          <select
-            value={filters.unit}
-            onChange={(e) => change("unit", e.target.value)}
-          >
-            <option value="">Все единицы</option>
-            {[...new Set(products.map((p) => p.unit))].map((v) => (
-              <option key={v}>{v}</option>
-            ))}
-          </select>
-        </label>
+        <ChoiceField
+          label="Направление"
+          value={filters.c}
+          onChange={(v) => change("c", v)}
+          options={[
+            { value: "", label: "Все направления" },
+            ...sections.map((s) => ({ value: s.id, label: s.name })),
+          ]}
+        />
+        <ChoiceField
+          label="Единица"
+          value={filters.unit}
+          onChange={(v) => change("unit", v)}
+          options={[
+            { value: "", label: "Все единицы" },
+            ...[...new Set(products.map((p) => p.unit))].map((v) => ({
+              value: v,
+              label: v,
+            })),
+          ]}
+        />
         <label>
           Поиск
           <input
@@ -90,7 +87,7 @@ export default function Catalog() {
       <div className="results">
         <span aria-live="polite">Позиций: {filtered.length}</span>
         <button className="textlink" onClick={request}>
-          Заявка ({Object.keys(basket).length}) <Arrow />
+          Заявка ({Object.keys(basket).length})
         </button>
       </div>
       <div className="product-list">

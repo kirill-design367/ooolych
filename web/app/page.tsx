@@ -2,7 +2,8 @@
 import { HoverWord } from "../components/HoverWord";
 import Link from "next/link";
 import { useState } from "react";
-import { Brand, Arrow, useSupply } from "../components/Supply";
+import { ChoiceField } from "../components/ChoiceField";
+import { Brand, useSupply } from "../components/Supply";
 import { heroPhoto, mobileHeroPhoto, materialPhoto } from "../lib/assets";
 import { DeliveryTruck, DeliveryMap } from "../components/DeliveryArt";
 import { estimate, price } from "../lib/catalog";
@@ -66,6 +67,7 @@ export default function Home() {
             >
               {sections.map((section) => (
                 <Link
+                  prefetch={false}
                   tabIndex={copy ? -1 : undefined}
                   key={section.id}
                   href={"/catalog/?c=" + section.id}
@@ -97,58 +99,73 @@ export default function Home() {
             }
           }}
         >
-          <label>
-            Материал
-            <select
+          <div className="estimate-material">
+            {item && (
+              <img
+                src={materialPhoto(item.category, item.image)}
+                alt=""
+                loading="lazy"
+                width="80"
+                height="80"
+              />
+            )}
+            <ChoiceField
+              label="Материал"
               value={item?.id || ""}
-              onChange={(e) => choose(e.target.value)}
-            >
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              onChange={choose}
+              options={products.map((p) => ({ value: p.id, label: p.name }))}
+            />
+          </div>
           <div className="form-grid">
             <label>
-              Количество, {item?.unit}
-              <input
-                type="number"
-                min=".001"
-                max="9999999"
-                step=".001"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-              />
+              Количество
+              <span className="measure">
+                <input
+                  type="number"
+                  min=".001"
+                  max="9999999"
+                  step=".001"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+                <span>{item?.unit}</span>
+              </span>
             </label>
             <label>
-              От МКАД, км
-              <input
-                type="number"
-                min="0"
-                step=".1"
-                value={distance}
-                onChange={(e) => setDistance(e.target.value)}
-                required
-              />
+              Расстояние от МКАД
+              <span className="measure">
+                <input
+                  type="number"
+                  min="0"
+                  step=".1"
+                  value={distance}
+                  onChange={(e) => setDistance(e.target.value)}
+                  required
+                />
+                <span>км</span>
+              </span>
             </label>
           </div>
-          <div className="sums" aria-live="polite">
-            <span>
-              Материалы <b>{valid ? price(quote.goods) : "—"}</b>
-            </span>
-            <span>
-              Доставка <b>{valid ? price(quote.freight) : "—"}</b>
-            </span>
-            <strong>
-              Итого <b>{valid ? price(quote.total) : "По запросу"}</b>
-            </strong>
+          <div className="quote-summary">
+            <div className="sums" aria-live="polite">
+              <span>
+                Материалы <b>{valid ? price(quote.goods) : "—"}</b>
+              </span>
+              <span>
+                Доставка <b>{valid ? price(quote.freight) : "—"}</b>
+              </span>
+              <strong>
+                Итого с доставкой{" "}
+                <b key={valid ? quote.total : "empty"}>
+                  {valid ? price(quote.total) : "По запросу"}
+                </b>
+              </strong>
+            </div>
+            <button className="btn quote-action" disabled={!valid}>
+              <HoverWord>Отправить на просчёт</HoverWord>
+            </button>
           </div>
-          <button className="btn dark" disabled={!valid}>
-            Отправить на просчёт <Arrow />
-          </button>
         </form>
       </section>
       <section className="catalog-band">
@@ -160,7 +177,7 @@ export default function Home() {
               </h2>
             </div>
             <Link href="/catalog/" className="textlink">
-              <HoverWord>Весь каталог</HoverWord> <Arrow />
+              <HoverWord>Весь каталог</HoverWord>
             </Link>
           </div>
           <div className="cat-grid">
@@ -223,18 +240,20 @@ export default function Home() {
         <div className="shell section">
           <h2 className="process-title">
             Как работаем
-            <span className="process-punctuation">
-              ?
-              <svg aria-hidden="true" viewBox="0 0 120 90" fill="none">
-                <path d="M6 2v21c0 33 19 43 50 43h57" />
-              </svg>
-            </span>
+            <span className="process-punctuation">?</span>
           </h2>
           <DeliveryTruck />
+          <div className="stage-rail" aria-hidden="true">
+            {steps.map(([name], i) => (
+              <span key={name} data-station={i + 1}>
+                0{i + 1}
+              </span>
+            ))}
+          </div>
           <div className="steps">
             {steps.map(([name, detail], i) => (
               <article key={name}>
-                <small>0{i + 1}</small>
+                <small data-station={i + 1}>0{i + 1}</small>
                 <h3>{name}</h3>
                 <p>{detail}</p>
               </article>

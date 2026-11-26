@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 100" fill="#211e1b" role="img">
+  <title>Луч — Уклон</title>
+  <g transform="translate(25 8) skewX(-12)">
+  <path d="M0 84 30 0h24l27 84H62L42 18 19 84Z" />
+  <path d="M73 0h21l22 37 21-37h21l-48 84H88l17-29Z" />
+  <path d="M159 0h19v26q0 10 10 10h29V0h20v84h-20V53h-34q-24 0-24-24Z" />
+  </g>
+</svg>
