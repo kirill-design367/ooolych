@@ -7,7 +7,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $action=field('action');
         if($action==='login'){
             if(!consume_limit('admin',600,12))throw new DomainException('Слишком много попыток. Попробуйте через 10 минут.');
-            $hash=admin_hash();if($hash===''||!password_verify(field('password',1024),$hash))throw new DomainException('Войти не удалось.');
+            $hash=admin_hash();
+            $passwordMatches=$hash!=='' && password_verify(field('password',1024),$hash);
+            if(!$passwordMatches || field('username',80)!==ADMIN_LOGIN)throw new DomainException('Войти не удалось.');
             session_regenerate_id(true);$_SESSION['editor']=time();$_SESSION['csrf']=bin2hex(random_bytes(24));go('/admin/');
         }
         if(!logged_in())throw new DomainException('Войдите в панель.');
@@ -25,7 +27,7 @@ if(isset($_GET['file'])){
 $tabs=['items'=>'Товары','categories'=>'Категории','groups'=>'Подкатегории','preview'=>'Предпросмотр','leads'=>'Заявки'];
 $tab=is_string($_GET['tab']??null)&&isset($tabs[$_GET['tab']])?$_GET['tab']:'items';
 page_top('Управление каталогом');?><section class="wrap inner"><div class="section-head"><h1>Панель управления</h1><?php if(logged_in()):?><form method="post"><?=csrf()?><button class="button outline" name="action" value="logout">Выйти</button></form><?php endif;?></div><?php flash();if($error):?><p role="alert" class="error"><?=h($error)?></p><?php endif;if(!logged_in()):?>
-<form class="panel stack login" method="post"><?=csrf()?><h2>Вход редактора</h2><label>Пароль<input type="password" name="password" required autocomplete="current-password" maxlength="1024"></label><button class="button dark" name="action" value="login">Войти</button></form>
+<form class="panel stack login" method="post"><?=csrf()?><h2>Вход редактора</h2><label>Логин<input name="username" required autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="80"></label><label>Пароль<input type="password" name="password" required autocomplete="current-password" maxlength="1024"></label><button class="button dark" name="action" value="login">Войти</button></form>
 <?php else:$state=revision();$d=json_decode($state['draft'],true);$dirty=$state['draft']!==$state['live'];?><div class="adminbar"><strong><?=$dirty?'Есть неопубликованные изменения':'Каталог опубликован'?></strong><form method="post"><?=csrf()?><input type="hidden" name="rev" value="<?=h($state['rev'])?>"><button class="button yellow" name="action" value="publish" <?=$dirty?'':'disabled'?>>Опубликовать каталог</button></form></div><div class="chips"><?php foreach($tabs as $key=>$label):?><a class="<?=$key===$tab?'sel':''?>" href="/admin/?tab=<?=$key?>"><?=$label?></a><?php endforeach;?></div>
 <?php if($tab==='preview'):?><h2>Предпросмотр черновика</h2>
 <?php foreach($d['categories'] as $cid=>$category):?><section class="preview-group"><h3><?=h($category['name'])?></h3><p><?=h($category['description'])?></p><div class="products"><?php foreach($d['items'] as $id=>$p)if($p['category']===$cid):?><article class="product">

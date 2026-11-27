@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/leads.php';
+const ADMIN_LOGIN = 'luch-admin';
 function admin_hash(): string {
     $p=private_dir().'/admin.hash';return getenv('LUCH_ADMIN_HASH')?: (is_file($p)?trim((string)file_get_contents($p)):'');
 }
